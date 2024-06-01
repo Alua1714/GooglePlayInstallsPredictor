@@ -1,0 +1,5 @@
+# Ignore specific CSV files in the Preprocess folder
+Codis/X_test_modified.csv
+Codis/X_train_modified.csv
+Codis/X_train_sampled.csv
+Codis/Google-Playstore.csv
