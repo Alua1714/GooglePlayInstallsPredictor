@@ -110,35 +110,35 @@ X_test["Installs"] = y_test
 X_train['Download'] = X_train['Installs']/X_train['Released']
 X_test['Download'] = X_test['Installs']/X_test['Released']
 
-X_train['LogInstalls'] = np.log(1 + X_train['Installs'])
-X_test['LogInstalls'] = np.log(1+X_test['Installs'])
+X_train['ModInstalls'] = np.log(1 + X_train['Installs'])
+X_test['ModInstalls'] = np.log(1+X_test['Installs'])
 
-X_train['LogMaximumInstalls'] = np.log(1 + X_train['Maximum Installs'])
-X_test['LogMaximumInstalls'] = np.log(1 + X_test['Maximum Installs'])
+X_train['ModMaximumInstalls'] = np.log(1 + X_train['Maximum Installs'])
+X_test['ModMaximumInstalls'] = np.log(1 + X_test['Maximum Installs'])
 
-X_train['LinearizedRating'] = X_train['Rating']**3
-X_test['LinearizedRating'] = X_test['Rating']**3
+X_train['ModRating'] = X_train['Rating']**3
+X_test['ModRating'] = X_test['Rating']**3
 
 best_lambda = -0.8
-X_train['LinearizedPrice'] = boxcox1p(1+X_train['Price'],best_lambda)
-X_test['LinearizedPrice'] = boxcox1p(1+X_test['Price'],best_lambda)
+X_train['ModPrice'] = boxcox1p(1+X_train['Price'],best_lambda)
+X_test['ModPrice'] = boxcox1p(1+X_test['Price'],best_lambda)
 
 best_lambda2=0.5
-X_train['LogSize'] = boxcox1p(X_train['Size'],best_lambda2)
-X_test['LogSize'] = boxcox1p(X_test['Size'],best_lambda2)
+X_train['ModSize'] = boxcox1p(X_train['Size'],best_lambda2)
+X_test['ModSize'] = boxcox1p(X_test['Size'],best_lambda2)
 
 best_lambda3 = 0.25
-X_train['LogLast Updated'] = boxcox1p(X_train['Last Updated'],best_lambda3)
-X_test['LogLast Updated'] = boxcox1p(X_test['Last Updated'],best_lambda3)
+X_train['ModLast Updated'] = boxcox1p(X_train['Last Updated'],best_lambda3)
+X_test['ModLast Updated'] = boxcox1p(X_test['Last Updated'],best_lambda3)
 
 # =============================================================================
 #  Normalitzo a N(0,1) només les que hem linearitzat
 # =============================================================================
 
-floatColumns = ['Price', 'Released', 'Download', 'LogInstalls', 'LogMaximumInstalls',
-       'LinearizedRating', 'LinearizedPrice', 'LogSize', 'LogLast Updated']
-#floatColumns = NormalizedData.select_dtypes(include=['float']).columns
-
+floatColumns = ['Released', 'Download', 'ModInstalls', 'ModMaximumInstalls',
+       'ModRating', 'ModPrice', 'ModSize', 'ModLast Updated']
+floatColumns = X_train.select_dtypes(include=['float']).columns
+print(floatColumns)
 for column in floatColumns:
     # Calculate mean and variance
     mean = np.mean(X_train[column])
@@ -183,13 +183,13 @@ X_train = X_train[X_train['Released'] < 1]
 X_test = X_test[X_test['Released'] < 1] #Potser no cal eliminar aquests 
 #Potser si, depèn de si volem predir per jocs antics.
 
-Q1 = X_train['LogSize'].quantile(0.25)
-Q3 = X_train['LogSize'].quantile(0.75)
+Q1 = X_train['ModSize'].quantile(0.25)
+Q3 = X_train['ModSize'].quantile(0.75)
 IQR = Q3 - Q1
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
-X_train = X_train[(X_train['LogSize'] >= lower_bound) & (X_train['LogSize'] <= upper_bound)]
-X_test = X_test[(X_test['LogSize'] >= lower_bound) & (X_test['LogSize'] <= upper_bound)]
+X_train = X_train[(X_train['ModSize'] >= lower_bound) & (X_train['ModSize'] <= upper_bound)]
+X_test = X_test[(X_test['ModSize'] >= lower_bound) & (X_test['ModSize'] <= upper_bound)]
 
 
 
