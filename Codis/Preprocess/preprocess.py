@@ -50,7 +50,7 @@ def save_dataframe_to_csv(X, filename):
         
 # Apply the function to create a new column 'Price_USD'
 
-dataOriginal = read_csv("../Google-Playstore.csv", header=0, delimiter=',')
+dataOriginal = read_csv("../Dades/Google-Playstore.csv", header=0, delimiter=',')
 
 dataMissingValues = dataOriginal.dropna()
 data20reviews = dataMissingValues[dataMissingValues['Rating Count'] >= 20]
@@ -193,15 +193,15 @@ X_test = X_test[(X_test['LogSize'] >= lower_bound) & (X_test['LogSize'] <= upper
 
 
 
-save_dataframe_to_csv(X_train, "../X_train_modified.csv")
-save_dataframe_to_csv(X_test, "../X_test_modified.csv")
+save_dataframe_to_csv(X_train, "../Dades/X_train_modified.csv")
+save_dataframe_to_csv(X_test, "../Dades/X_test_modified.csv")
 
 
 sample_fraction = 0.01
 sample_size = int(len(X_train) * sample_fraction)
 dataSample = X_train.sample(n=sample_size, random_state=42)  # using a fixed seed for reproducibility
 
-save_dataframe_to_csv(dataSample, "../X_train_sampled.csv")
+save_dataframe_to_csv(dataSample, "../Dades/X_train_sampled.csv")
 ##OUTLIERS
 
 
