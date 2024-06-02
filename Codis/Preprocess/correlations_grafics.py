@@ -2,10 +2,13 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+
+array_corr = []
 def calculate_corr(target, df, numeric=[], categoric=[]):
     # Calculate correlations for numeric features
     if numeric:
         correlations = df[numeric].corrwith(df[target])
+        array_corr.append(correlations)
 
         # Plot each numeric feature against the target variable colored by each categorical feature
         for num_feature in numeric:
@@ -31,12 +34,14 @@ for column in X.columns:
         
 NotMod = ['Price','Rating','Last Updated','Installs','Size']
 Mod = ['ModInstalls', 'ModRating', 'ModPrice', 'ModSize', 'ModLast Updated']
+correlation_matrix = X.corr()
+correlation_matrix.to_csv('../Dades/correlation_matrix.csv')
 
 categories = np.array(categories)
-calculate_corr("ModMaximumInstalls", X, Mod, categories)
-calculate_corr("Installs", X, NotMod, categories)
+calculate_corr("Rating", X, Mod, categories)
+#calculate_corr("Installs", X, NotMod, categories)
 calculate_corr("ModMaximumInstalls", X, NotMod, categories)
-calculate_corr("Installs", X, Mod, categories)
+#calculate_corr("Installs", X, Mod, categories)
 
 
 
