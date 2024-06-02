@@ -94,6 +94,11 @@ dataTransformed3['Days_Elapsed'] = (target_date - dataTransformed3['Last Updated
 dataTransformed3['Last Updated'] = dataTransformed3['Days_Elapsed']
 dataTransformed3 = dataTransformed3.drop(columns=['Days_Elapsed'])
 
+
+
+
+
+
 key_float = ['Rating', 'Installs', 'Price', 'Size', 'Released', 'Last Updated', 'Maximum Installs']
 for i in key_float:
     dataTransformed3[i] = dataTransformed3[i].astype(float)
@@ -116,6 +121,31 @@ X_test['ModInstalls'] = np.log(1+X_test['Installs'])
 X_train['ModMaximumInstalls'] = np.log(1 + X_train['Maximum Installs'])
 X_test['ModMaximumInstalls'] = np.log(1 + X_test['Maximum Installs'])
 
+av_mod = np.mean(X_train['ModMaximumInstalls'])
+av = np.mean(X_train['Maximum Installs'])
+X_train['Exit'] = X_train['Maximum Installs'] > av
+X_test['ModExit'] = X_test['ModMaximumInstalls'] > av_mod
+
+plt.figure(figsize=(12, 5))
+
+# Histogram for X_train['Exit']
+plt.subplot(1, 2, 1)
+X_train['Exit'].value_counts().plot(kind='bar', color=['blue', 'orange'])
+plt.title('Histogram of Exit')
+plt.xlabel('Exit')
+plt.ylabel('Count')
+
+# Histogram for X_test['ModExit']
+plt.subplot(1, 2, 2)
+X_test['ModExit'].value_counts().plot(kind='bar', color=['blue', 'orange'])
+plt.title('Histogram of ModExit')
+plt.xlabel('ModExit')
+plt.ylabel('Count')
+
+plt.tight_layout()
+plt.show()
+
+
 X_train['ModRating'] = X_train['Rating']**3
 X_test['ModRating'] = X_test['Rating']**3
 
@@ -130,6 +160,9 @@ X_test['ModSize'] = boxcox1p(X_test['Size'],best_lambda2)
 best_lambda3 = 0.25
 X_train['ModLast Updated'] = boxcox1p(X_train['Last Updated'],best_lambda3)
 X_test['ModLast Updated'] = boxcox1p(X_test['Last Updated'],best_lambda3)
+
+
+
 
 # =============================================================================
 #  Normalitzo a N(0,1) només les que hem linearitzat
