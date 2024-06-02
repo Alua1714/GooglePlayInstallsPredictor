@@ -34,7 +34,6 @@ def plot_no_corr(target, df):
         plt.show()
 
 
-# Load your dataset
 X = pd.read_csv('../Dades/X_train_modified.csv')
 X = X[X['Free'] == False]
 floatColumns = X.select_dtypes(include=['float']).columns
@@ -47,12 +46,13 @@ for column in X.columns:
 NotMod = ['Price','Rating','Last Updated','Installs','Size']
 Mod = ['ModInstalls', 'ModRating', 'ModPrice', 'ModSize', 'ModLast Updated']
 
-# List of all columns excluding the target
-
 categories = np.array(categories)
 print(categories)
 calculate_corr("ModMaximumInstalls", X, Mod, categories)
-calculate_corr("ModMaximumInstalls", X, Mod, categories)
+calculate_corr("Installs", X, NotMod, categories)
+Calcualte_corr("ModMaximumInstalls", X, NotMod, categories)
+calculate_corr("Installs", X, Mod, categories)
+
 
 
 
