@@ -3,11 +3,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 def calculate_corr(target, df, numeric=[], categoric=[]):
-    # Check if the target and features exist in the dataframe
-    if target not in df.columns:
-        print("Target variable not found in DataFrame.")
-        return
-    
     # Calculate correlations for numeric features
     if numeric:
         correlations = df[numeric].corrwith(df[target])
@@ -23,16 +18,6 @@ def calculate_corr(target, df, numeric=[], categoric=[]):
                     plt.show()
                 else:
                     print(f"Categorical feature '{cat_feature}' not found in DataFrame.")
-                          
-                          
-def plot_no_corr(target, df):    
-    features = df.columns.difference([target])    
-    # Plot each feature against the target variable
-    for feature in features:
-        sns.lmplot(x=feature, y=target, data=df, aspect=1.5)
-        plt.title(f'Linear relation between {feature}')
-        plt.show()
-
 
 X = pd.read_csv('../Dades/X_train_modified.csv')
 X = X[X['Free'] == False]
@@ -47,10 +32,9 @@ NotMod = ['Price','Rating','Last Updated','Installs','Size']
 Mod = ['ModInstalls', 'ModRating', 'ModPrice', 'ModSize', 'ModLast Updated']
 
 categories = np.array(categories)
-print(categories)
 calculate_corr("ModMaximumInstalls", X, Mod, categories)
 calculate_corr("Installs", X, NotMod, categories)
-Calcualte_corr("ModMaximumInstalls", X, NotMod, categories)
+calculate_corr("ModMaximumInstalls", X, NotMod, categories)
 calculate_corr("Installs", X, Mod, categories)
 
 
