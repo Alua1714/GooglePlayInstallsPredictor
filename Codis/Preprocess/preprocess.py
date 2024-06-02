@@ -135,11 +135,11 @@ X_test['ModLast Updated'] = boxcox1p(X_test['Last Updated'],best_lambda3)
 #  Normalitzo a N(0,1) només les que hem linearitzat
 # =============================================================================
 
-floatColumns = ['Released', 'Download', 'ModInstalls', 'ModMaximumInstalls',
+floatColumns1 = ['Released', 'Download', 'ModInstalls', 'ModMaximumInstalls',
        'ModRating', 'ModPrice', 'ModSize', 'ModLast Updated']
 floatColumns = X_train.select_dtypes(include=['float']).columns
 print(floatColumns)
-for column in floatColumns:
+for column in floatColumns1:
     # Calculate mean and variance
     mean = np.mean(X_train[column])
     variance = np.var(X_train[column])
