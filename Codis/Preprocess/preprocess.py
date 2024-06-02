@@ -59,6 +59,15 @@ columnsToDrop = ['App Name', 'App Id', 'Rating Count', 'Minimum Android',
         'Privacy Policy', 'Scraped Time']
 dataFilterColumns = data20reviews.drop(columns=columnsToDrop)
 
+# We also will filter apps with too little downloads
+dataFilterColumns = dataFilterColumns[
+    (dataFilterColumns['Installs'] != "0+") &
+    (dataFilterColumns['Installs'] != "1+") &
+    (dataFilterColumns['Installs'] != "10+") &
+    (dataFilterColumns['Installs'] != "5+") &
+    (dataFilterColumns['Installs'] != "50+")
+]
+
 
 all_key = ['Category', 'Rating', 'Installs', 'Free', 'Price', 'Currency', 'Maximum Installs', 'Size', 'Released', 'Last Updated', 'Content Rating', 'Ad Supported', 'In App Purchases', 'Editors Choice']
 dataNoMissings1 = dataFilterColumns[dataFilterColumns['Currency'] != 'XXX']
