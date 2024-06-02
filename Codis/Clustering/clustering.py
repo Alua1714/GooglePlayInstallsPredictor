@@ -11,6 +11,7 @@ from itertools import combinations
 from sklearn.manifold import TSNE
 import gower
 from sklearn.manifold import MDS
+from scipy.cluster.hierarchy import dendrogram, linkage
 
 # for reproducibility
 np.random.seed(7)
@@ -38,7 +39,12 @@ def compute_clustering_and_plot_PCA(K, X_train1, n_components, results):
     kmeans.fit(X_train)
     labels = kmeans.labels_
 
-
+    X_train['Cluster'] = labels
+    cluster_averages = X_train.groupby('Cluster').mean()
+    for cluster in range(K):
+           print(f"Cluster {cluster} Average Values:")
+           display(cluster_averages.loc[cluster])
+           
     # Fem el PCA
     pca = PCA(n_components=n_components)
     principal_components = pca.fit_transform(X_train)
@@ -111,7 +117,8 @@ def compute_clustering_and_plot_MDS(K, X_train, results):
     kmeans.fit(mds_results)
     labels = kmeans.labels_
 
-
+    X_train['Cluster'] = labels
+    
     #MDS and distància gower
     distance_matrix = gower.gower_matrix(X_train)
     print("hola")
@@ -141,20 +148,41 @@ def compute_clustering_and_plot_MDS(K, X_train, results):
     return results
 
 
+def perform_clustering_and_plot_dendrogram(data):
+    # Ensure the data is in a suitable format, possibly standardize or normalize if required
+    # data should be a DataFrame where rows are samples and columns are features
+    
+    # Generate the linkage matrix using Ward's method
+    Z = linkage(data, method='ward')
+    
+    # Plotting the dendrogram
+    plt.figure(figsize=(10, 7))
+    plt.title('Hierarchical Clustering Dendrogram')
+    plt.xlabel('Sample index')
+    plt.ylabel('Distance')
+    dendrogram(
+        Z,
+        leaf_rotation=90.,  # rotates the x axis labels
+        leaf_font_size=8.,  # font size for the x axis labels
+    )
+    plt.show()
+
 
 
 index= pd.MultiIndex.from_arrays([['kmeans'], [3]], names=('model', 'K'))
 results_df = pd.DataFrame(columns=['CH score', 'Silhouette score', 'DB score'])
 
-K_values = [2,3,4,5,6,7,8]
+K_values = [2,3,4,5,6,7]
+
+
+#perform_clustering_and_plot_dendrogram(X_train)
+
 
 for k in K_values:
     X_compl = X.drop(columns=['Download','Maximum Installs','Price','Rating','Last Updated','Installs','Size'])
     results = compute_clustering_and_plot_PCA(k, X_train,3, results_df)
 
 print(results_df)
-
-
 
 
 

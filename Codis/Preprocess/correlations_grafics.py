@@ -20,6 +20,7 @@ def calculate_corr(target, df, numeric=[], categoric=[]):
                     print(f"Categorical feature '{cat_feature}' not found in DataFrame.")
 
 X = pd.read_csv('../Dades/X_train_modified.csv')
+
 X = X[X['Free'] == False]
 floatColumns = X.select_dtypes(include=['float']).columns
 categories = []

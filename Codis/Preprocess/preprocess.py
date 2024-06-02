@@ -51,7 +51,7 @@ def save_dataframe_to_csv(X, filename):
 # Apply the function to create a new column 'Price_USD'
 
 dataOriginal = read_csv("../Dades/Google-Playstore.csv", header=0, delimiter=',')
-
+print(dataOriginal.shape)
 dataMissingValues = dataOriginal.dropna()
 data20reviews = dataMissingValues[dataMissingValues['Rating Count'] >= 20]
 columnsToDrop = ['App Name', 'App Id', 'Rating Count', 'Minimum Android',
