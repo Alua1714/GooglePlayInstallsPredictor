@@ -133,6 +133,8 @@ X_test['ModMaximumInstalls'] = np.log(1 + X_test['Maximum Installs'])
 av_mod = np.mean(X_train['ModMaximumInstalls'])
 av = np.mean(X_train['Maximum Installs'])
 X_train['Exit'] = X_train['Maximum Installs'] > av
+X_train['ModExit'] = X_train['ModMaximumInstalls'] > av_mod
+X_test['Exit'] = X_test['Maximum Installs'] > av
 X_test['ModExit'] = X_test['ModMaximumInstalls'] > av_mod
 
 plt.figure(figsize=(12, 5))
