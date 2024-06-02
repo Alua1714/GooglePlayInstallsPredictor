@@ -34,8 +34,8 @@ for column in X.columns:
         
 NotMod = ['Price','Rating','Last Updated','Installs','Size']
 Mod = ['ModInstalls', 'ModRating', 'ModPrice', 'ModSize', 'ModLast Updated']
-correlation_matrix = X.corr()
-correlation_matrix.to_csv('../Dades/correlation_matrix.csv')
+#correlation_matrix = X.corr()
+#correlation_matrix.to_csv('../Dades/correlation_matrix.csv')
 
 categories = np.array(categories)
 calculate_corr("Rating", X, Mod, categories)
