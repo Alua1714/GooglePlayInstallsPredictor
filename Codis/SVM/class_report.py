@@ -24,6 +24,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 from matplotlib import pyplot as plt 
 from pandas import read_csv
+from sklearn.metrics import classification_report
 
 
 def process_dataframe(X_train, categorical_columns):
@@ -61,19 +62,16 @@ for column_name in X.columns:
        X = X.drop(columns=[column_name])
        
        
-y = np.array([])
-if target == "ModExit" or target=="Exit":
-    y = [1 if element else -1 for element in X[target]]
-        
-else:
-    y = X[target]
-
+       
+y = X[target]
 X = X.drop(columns=[target])
 categorical_columns_all = np.array(['Category', 'Free', 'Content Rating', 'Ad Supported', 'In App Purchases', 'Editors Choice'])#funciona acceptable
 categorical_columns_2 = np.array(['Category', 'Ad Supported', 'In App Purchases', 'Editors Choice'])#funciona igual que all
 categorical_columns_3 = np.array(['Editors Choice', 'Free'])
-X = process_dataframe(X, categorical_columns_all)
-print(X.columns)
+X = process_dataframe(X, categorical_columns_3)
+#scaler = StandardScaler()
+#X = scaler.fit_transform(X)
+
 
 #NOTES LINEAR KERNER WORKS, OK, RBF workds nice
 
@@ -81,23 +79,25 @@ X_train, X_val, y_train, y_val= train_test_split(X, y, test_size=0.5, random_sta
 cv_results = pd.DataFrame(columns=['Kernel', 'C', 'epsilon', 'R2', 'MSE', 'median_absolute_error', 'mean_absolute_error'])
 
 
-Cs = [0.1,0.5,1,5,10,20,30,40,50,60,100]
+Cs = [10,20,30,40,50,60,100]
 epsilons = [0.001,0.0001,0.00001,0.000001,0]
 for c in Cs:
     for epsilon in epsilons:
         svm = SVR(kernel='rbf',C=c,epsilon=epsilon)
         svm.fit(X_train,y_train)
-        y_pred = svm.predict(X_val)
-        y_pred_true = np.array([-1 if a <0 else 1 for a in y_pred])
-        print("Validation precision, Training precision, percentage False")
-        print(sum(y_pred_true == y_val)/len(y_pred))
-        print(sum(np.array([-1 if a <0 else 1 for a in svm.predict(X_train) ]) == y_train)/len(y_train))
-        print(sum(y_pred_true == -1)/len(y_pred_true))
-        cv_results.loc['LinearSVR-{}-{}'.format(c,epsilon), :] = ['linear', c, epsilon] + comptue_metrics(y_pred,y_val)
-        print(cv_results.loc['LinearSVR-{}-{}'.format(c,epsilon), :] )
+        y_pred = svm.predict(X_val)>0.5
+        y_pred = [1 if el else 0 for el in y_pred]
+        y_val = [1 if el else 0 for el in y_val]
+        #y_pred_true = np.array([-1 if a <0 else 1 for a in y_pred])
+        #print(sum(y_pred_true == y_val)/len(y_pred))
+        #print(sum(np.array([-1 if a <0 else 1 for a in svm.predict(X_train) ]) == y_train)/len(y_train))
+        #print(sum(y_pred_true == -1)/len(y_pred_true))
+        print(classification_report(y_val, y_pred))
+        #cv_results.loc['LinearSVR-{}-{}'.format(c,epsilon), :] = ['linear', c, epsilon] + comptue_metrics(y_pred,y_val)
+        #print(cv_results.loc['LinearSVR-{}-{}'.format(c,epsilon), :] )
         
-best = cv_results.sort_values(by='R2',ascending=False).iloc[0,:]
-print(best)
+#best = cv_results.sort_values(by='R2',ascending=False).iloc[0,:]
+#print(best)
 
 
 
