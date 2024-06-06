@@ -49,7 +49,7 @@ def comptue_metrics(y_pred, y_real):
 
 np.random.seed(7)
 
-X = read_csv("../Dades/X_train_sampled.csv", header=0, delimiter=',')
+X = read_csv("../Dades/X_train_modified.csv", header=0, delimiter=',')
 key_float = ['Rating','Installs', 'Price', 'Size', 'Released', 'Last Updated', 'Maximum Installs']
 key_floatMod =  ['ModRating','ModInstalls', 'ModPrice', 'ModSize', 'Released', 'ModLast Updated', 'ModMaximumInstalls']
 target_columns = ['Download','ModExit', 'Exit', 'Installs', 'ModInstalls', 'ModMaximumInstalls', 'Maximum Installs']
@@ -80,6 +80,7 @@ print(X.columns)
 X_train, X_val, y_train, y_val= train_test_split(X, y, test_size=0.5, random_state=42) 
 cv_results = pd.DataFrame(columns=['Kernel', 'C', 'epsilon', 'R2', 'MSE', 'median_absolute_error', 'mean_absolute_error'])
 
+X_test = read_csv("../Dades/X_test_modified.csv", header=0, delimiter=',')
 
 Cs = [0.1,0.5,1,5,10,20,30,40,50,60,100]
 epsilons = [0.001,0.0001,0.00001,0.000001,0]
@@ -99,8 +100,24 @@ for c in Cs:
 best = cv_results.sort_values(by='R2',ascending=False).iloc[0,:]
 print(best)
 
+cv_results = pd.DataFrame(columns=['Kernel', 'C', 'epsilon', 'R2', 'MSE', 'median_absolute_error', 'mean_absolute_error'])
 
-
+#TEST RESULTS
+for c in Cs:
+    for epsilon in epsilons:
+        svm = SVR(kernel='rbf',C=c,epsilon=epsilon)
+        svm.fit(X_train,y_train)
+        y_pred = svm.predict(X_test)
+        y_pred_true = np.array([-1 if a <0 else 1 for a in y_pred])
+        print("Validation precision, Training precision, percentage False")
+        print(sum(y_pred_true == y_val)/len(y_pred))
+        print(sum(np.array([-1 if a <0 else 1 for a in svm.predict(X_train) ]) == y_train)/len(y_train))
+        print(sum(y_pred_true == -1)/len(y_pred_true))
+        cv_results.loc['LinearSVR-{}-{}'.format(c,epsilon), :] = ['linear', c, epsilon] + comptue_metrics(y_pred,y_val)
+        print(cv_results.loc['LinearSVR-{}-{}'.format(c,epsilon), :] )
+        
+best = cv_results.sort_values(by='R2',ascending=False).iloc[0,:]
+print(best)
 
 
 
