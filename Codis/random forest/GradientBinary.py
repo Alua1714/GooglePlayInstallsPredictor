@@ -91,7 +91,7 @@ for column in Xtest.columns:
             Xtest = Xtest.merge(Xtest_one_hot,left_index=True,right_index=True)
             Xtest = Xtest.drop(columns=[column])
 
-Xtrain, Xval, Ytrain, Yval = train_test_split(Xtrain, Ytrain, test_size=0.25, stratify=Ytrain, random_state=1)
+Xtrain, Xval, Ytrain, Yval = train_test_split(Xtrain, Ytrain, test_size=0.25, stratify=Ytrain, random_state=1) 
 print("SETUP DONE")
 
 from sklearn.ensemble import GradientBoostingClassifier

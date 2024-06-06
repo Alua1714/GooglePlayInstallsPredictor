@@ -71,6 +71,14 @@ for column in Xtest.columns:
             
 Xtrain, Xval, Ytrain, Yval = train_test_split(Xtrain, Ytrain, test_size=0.25, stratify=Ytrain, random_state=1)
 
+def compute_metrics(y_true,y_pred):
+    accuracy = accuracy_score(y_true,y_pred)
+    f1_score_macro = f1_score(y_true,y_pred,average='macro')
+    return [accuracy,f1_score_macro]
+
+results = pd.DataFrame(columns=['Accuracy', 'F1-score (macro avg)'])
+
+
 print("SETUP")
 from sklearn.ensemble import GradientBoostingClassifier
 '''
